@@ -1,0 +1,30 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/distributed-systems-hw/src",
+  "monorepo": true,
+  "root": "apps/distributed-systems-hw",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/distributed-systems-hw/tsconfig.app.json"
+  },
+  "projects": {
+    "image-handler": {
+      "type": "application",
+      "root": "apps/image-handler",
+      "entryFile": "main",
+      "sourceRoot": "apps/image-handler/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/image-handler/tsconfig.app.json"
+      }
+    },
+    "gateway": {
+      "type": "application",
+      "root": "apps/gateway",
+      "entryFile": "main",
+      "sourceRoot": "apps/gateway/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/gateway/tsconfig.app.json"
+      }
+    }
+  }
+}
