@@ -1,8 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { createThumbnail, getImageDimensions } from './helpers';
-import { operationsCodes } from '../../utils/operation-codes';
 import { InjectModel } from '@nestjs/mongoose';
-import { LAMAR_FILE } from '../../../apps/schema-names';
+import { DS_FILE_SCHEMA } from '../../../apps/schema-names';
 import { Model } from 'mongoose';
 import { File } from './file.model';
 import * as path from 'path';
@@ -10,8 +9,10 @@ import * as path from 'path';
 @Injectable()
 export class FileUploadService {
   constructor(
-    @InjectModel(LAMAR_FILE) private readonly fileModel: Model<File>,
-  ) {}
+    @InjectModel(DS_FILE_SCHEMA) private readonly fileModel: Model<File>,
+  ) {
+  }
+
   async saveFile(file: Express.Multer.File) {
     let createdFile;
     try {
@@ -20,7 +21,6 @@ export class FileUploadService {
       console.log('Resizing error: ', e.message || e);
       throw new BadRequestException({
         message: e.message || e,
-        code: operationsCodes.UN_COMPLETE,
       });
     }
     const metadata = await getImageDimensions(file.path);
@@ -39,9 +39,9 @@ export class FileUploadService {
     return {
       file: createdFile,
       message: 'File saved successfully',
-      code: operationsCodes.SUCCESS,
     };
   }
+
   async saveMultipleFiles(files: Express.Multer.File[]) {
     try {
       const res = [];
@@ -52,13 +52,11 @@ export class FileUploadService {
       return {
         files: res,
         message: 'File saved successfully',
-        code: operationsCodes.SUCCESS,
-      }
+      };
     } catch (e) {
       console.log({ e });
       throw new BadRequestException({
         message: e.message || e,
-        code: operationsCodes.UN_COMPLETE,
       });
     }
   }

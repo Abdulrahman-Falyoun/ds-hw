@@ -4,5 +4,5 @@ export interface EnvironmentVariables {
 }
 
 export default (): EnvironmentVariables => ({
-  port: +process.env.MAIN_PORT,
+  port: +process.env.GATEWAY_PORT,
 });

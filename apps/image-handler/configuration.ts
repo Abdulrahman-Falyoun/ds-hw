@@ -12,7 +12,7 @@ export interface EnvironmentVariables {
 }
 
 export default () :  EnvironmentVariables => ({
-  port: +process.env.USER_MANAGEMENTS_PORT,
+  port: +process.env.IMAGE_HANDLER_PORT,
   redis: {
     url : process.env.REDIS_URL,
     password: process.env.REDIS_PASSWORD,

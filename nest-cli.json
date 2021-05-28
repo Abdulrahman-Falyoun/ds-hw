@@ -1,11 +1,11 @@
 {
   "collection": "@nestjs/schematics",
-  "sourceRoot": "apps/distributed-systems-hw/src",
+  "sourceRoot": "apps/gateway/src",
   "monorepo": true,
-  "root": "apps/distributed-systems-hw",
+  "root": "apps/gateway",
   "compilerOptions": {
     "webpack": true,
-    "tsConfigPath": "apps/distributed-systems-hw/tsconfig.app.json"
+    "tsConfigPath": "apps/gateway/tsconfig.app.json"
   },
   "projects": {
     "image-handler": {
