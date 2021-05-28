@@ -15,7 +15,6 @@ export const getImageDimensions = async (image) => {
 
 export const editFileName = (req, file, callback) => {
   const name = file.originalname.split(".")[0];
-  console.log({name});
   const fileExtName = extname(file.originalname);
   const randomName = Array(4)
     .fill(null)

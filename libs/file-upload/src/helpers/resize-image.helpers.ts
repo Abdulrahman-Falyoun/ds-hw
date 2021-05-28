@@ -6,5 +6,6 @@ export const createThumbnail = (file: Express.Multer.File, width = 200) => {
     .resize({
       width,
     })
+    .jpeg({ quality: 80 })
     .toFile(`${pathToUploadedFiles}/thumbnails/${file.filename}`);
 };
