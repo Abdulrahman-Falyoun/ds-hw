@@ -1,18 +1,52 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { createThumbnail, getImageDimensions } from '../../../libs/file-upload/src/helpers';
-import {  extname } from "path";
+import { extname } from 'path';
 import { Model } from 'mongoose';
 import { IFile } from '../../../libs/file-upload/src';
 import { DS_FILE_SCHEMA } from '../../schema-names';
 import { InjectModel } from '@nestjs/mongoose';
+import * as puppeteer from 'puppeteer';
+import * as fs from 'fs';
+import { pathToUploadedFiles } from '../../../libs/file-upload/src/constants';
 
 @Injectable()
 export class ImageHandlerService {
 
   constructor(@InjectModel(DS_FILE_SCHEMA) private readonly fileModel: Model<IFile>) {
   }
+
   async takeScreenshot(website: string) {
-    return `screenshot for ${website}`;
+    let browser: puppeteer.Browser;
+    try {
+      browser = await puppeteer.launch({
+        headless: false,
+      });
+      const page = await browser.newPage();
+      await page.goto(website, {
+        timeout: 0,
+        waitUntil: ['domcontentloaded', 'networkidle0'],
+      });
+
+      const path = pathToUploadedFiles + '/screenshots/' + (website.substr(website.indexOf("https://") + 8)) + "-" + (new Date().toISOString());
+      await page.screenshot({
+        path,
+        type: 'jpeg',
+        fullPage: true,
+      });
+      return `screenshot url http://localhost:${process.env.PORT}/${path}`;
+    } catch (err) {
+      console.log(`❌ Error: ${err.message}`);
+      return `Could not take screenshot`
+    } finally {
+      await browser.close();
+      console.log(`\n🎉 GitHub profile screenshots captured.`);
+    }
+  }
+
+
+  largestFile(files: Express.Multer.File []) {
+    const sortedFiles = files.sort((f1, f2) => f1.size - f2.size);
+    return sortedFiles[sortedFiles.length - 1];
   }
 
 
