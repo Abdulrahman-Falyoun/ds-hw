@@ -13,7 +13,10 @@ export class ImageHandlerRequest {
 
   constructor(
     private imageHandlerEmitter: ImageHandlerEmitter,
+    private discoveryService: DiscoveryService
   ) {
+    console.log(discoveryService);
+    discoveryService.resolveHostname('jqservice')
   }
 
 
