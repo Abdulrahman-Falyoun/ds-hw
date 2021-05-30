@@ -8,7 +8,7 @@ services:
       context: .
       target: development
       dockerfile: ./Dockerfile
-    command: concurrently --kill-others "nest start gateway --watch" "nest start image-handler --watch"
+    command: nest start gateway --watch
     ports:
       - 3000:3000
       - 9229:9229
@@ -17,5 +17,28 @@ services:
     volumes:
       - apps/gateway
     restart: unless-stopped
+  dev.image-handler:
+    container_name: nestjs_api_dev
+    image: nestjs-api-dev:1.0.0
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    command:  nest start image-handler --watch
+    ports:
+      - 3001:3001
+      - 9239:9239
+    networks:
+      - nesjs-network
+    volumes:
+      - apps/gateway
+    restart: unless-stopped
 networks:
   nesjs-network:
+
+
+
+
+
+
+

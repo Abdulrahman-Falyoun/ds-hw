@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ImageHandlerService } from './image-handler.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { RESIZE_IMAGE, TAKE_SCREENSHOT } from '../../patterns';
+import { LARGEST_FILE, RESIZE_IMAGE, TAKE_SCREENSHOT } from '../../patterns';
 
 @Controller()
 export class ImageHandlerController {
@@ -18,5 +18,10 @@ export class ImageHandlerController {
   async resizeImage(@Payload() payload: { image: Express.Multer.File; opts: { width: number; height: number } }) {
     return await this.imageHandlerService.resizeImage(payload);
 
+  }
+
+  @MessagePattern(LARGEST_FILE)
+  largestFile(@Payload() files: Express.Multer.File[]) {
+    return this.imageHandlerService.largestFile(files);
   }
 }

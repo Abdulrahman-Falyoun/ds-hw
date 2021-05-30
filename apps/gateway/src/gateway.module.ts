@@ -5,6 +5,7 @@ import configuration from './configuration';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { FileUploadModule } from '../../../libs/file-upload/src';
 import { ImageHandlerRequestModule } from './request/image-handler.request.module';
+import { DiscoveryService, EurekaModule } from 'nestjs-eureka';
 
 @Module({
   imports: [

@@ -1,10 +1,10 @@
-import { Body, Controller, Logger, LoggerService, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Inject, Logger, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ImageHandlerEmitter } from '../emitters/image-handler.emitter';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { pathToUploadedFiles } from '../../../../libs/file-upload/src/constants';
 import { editFileName, imageFileFilter } from '../../../../libs/file-upload/src/helpers';
-
+import { DiscoveryService } from 'nestjs-eureka';
 
 @Controller('/image-handle')
 export class ImageHandlerRequest {
@@ -35,6 +35,7 @@ export class ImageHandlerRequest {
     }),
   )
   resize(@UploadedFile() image: Express.Multer.File, @Query() opts: { width: number, height: number }) {
+
     return this.imageHandlerEmitter.emitResizeImage({ image, opts });
   }
 }
