@@ -1,5 +1,5 @@
-import * as sharp from "sharp";
 import { extname } from "path";
+import * as sharp from "sharp";
 
 export const imageFileFilter = (req, file, callback) => {
   if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
