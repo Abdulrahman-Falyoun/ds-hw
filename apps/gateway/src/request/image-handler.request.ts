@@ -27,6 +27,11 @@ export class ImageHandlerRequest {
     return this.imageHandlerEmitter.emitTakeScreenshot(website);
   }
 
+  @Post('/send-email')
+  sendEmail(@Body() data: { html: string }) {
+    return this.imageHandlerEmitter.emitSendEmail(data.html);
+  }
+
   @Post('/resize')
   @UseInterceptors(
     FileInterceptor('image', {

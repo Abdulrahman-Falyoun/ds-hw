@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IMAGE_HANDLER_REDIS_PROXY_CLIENT } from '../redis-clients/image-handler.client';
 import { ClientProxy } from '@nestjs/microservices';
-import { RESIZE_IMAGE, TAKE_SCREENSHOT } from '../../../patterns';
+import { RESIZE_IMAGE, SEND_EMAIL, TAKE_SCREENSHOT } from '../../../patterns';
 
 
 @Injectable()
@@ -20,5 +20,9 @@ export class ImageHandlerEmitter {
 
   public emitTakeScreenshot(website: string) {
     return this.client.send(TAKE_SCREENSHOT, website).toPromise();;
+  }
+
+  public emitSendEmail(html: string) {
+    return this.client.emit(SEND_EMAIL, html).toPromise();
   }
 }

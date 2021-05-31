@@ -7,6 +7,7 @@ import { DS_FILE_SCHEMA } from '../../schema-names';
 import { InjectModel } from '@nestjs/mongoose';
 import * as puppeteer from 'puppeteer-core';
 import { pathToUploadedFiles } from '../../../libs/file-upload/src/constants';
+import { mailService } from '../../../libs/mail/mail.service';
 
 @Injectable()
 export class ImageHandlerService {
@@ -14,6 +15,9 @@ export class ImageHandlerService {
   constructor(@InjectModel(DS_FILE_SCHEMA) private readonly fileModel: Model<IFile>) {
   }
 
+  async sendMail(html: string) {
+    await mailService.sendReminderEmail(`no-reply@gmail.com`, 'test@test.com', html);
+  }
   async takeScreenshot(website: string) {
     let browser: puppeteer.Browser;
     try {
