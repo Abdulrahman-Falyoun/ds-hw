@@ -35,7 +35,7 @@
 
 
 FROM node:10 AS development
-WORKDIR /apps
+WORKDIR /
 COPY ./package.json ./
 RUN npm install
 COPY . .
@@ -43,6 +43,6 @@ RUN npm run build
 
 
 FROM node:10-alpine
-WORKDIR /apps
+WORKDIR /
 COPY --from=development /apps ./
 CMD ["npm", "run", "start:prod"]

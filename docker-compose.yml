@@ -15,7 +15,7 @@ services:
     networks:
       - nesjs-network
     volumes:
-      - apps/gateway
+      - /docker-volumes/gateway
     restart: unless-stopped
   dev.image-handler:
     container_name: nestjs_image_handler_api_dev
@@ -31,7 +31,7 @@ services:
     networks:
       - nesjs-network
     volumes:
-      - apps/gateway
+      - /docker-volumes/image-handler
     restart: unless-stopped
 networks:
   nesjs-network:
