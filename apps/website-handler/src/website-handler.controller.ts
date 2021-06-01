@@ -13,5 +13,4 @@ export class WebsiteHandlerController {
     return this.websiteHandlerService.takeScreenshot(website);
   }
 
-
 }

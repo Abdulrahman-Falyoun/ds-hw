@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IMAGE_HANDLER_REDIS_PROXY_CLIENT } from '../ms-clients/redis-handler.client';
 import { ClientProxy } from '@nestjs/microservices';
-import { PDF_PAGE_AND_SEND_TO_EMAIL, RESIZE_IMAGE, SEND_EMAIL, TAKE_SCREENSHOT } from '../../../patterns';
+import { LARGEST_FILE, PDF_PAGE_AND_SEND_TO_EMAIL, RESIZE_IMAGE, SEND_EMAIL, TAKE_SCREENSHOT } from '../../../patterns';
 import { RABBIT_HANDLER_REDIS_PROXY_CLIENT } from '../ms-clients/rabbit-handler.client';
 
 
@@ -26,7 +26,10 @@ export class MainEmitter {
     return this.client.send(TAKE_SCREENSHOT, website).toPromise();;
   }
 
-  public emitSendEmail({to, text, website, subject}) {
+  public emitLargestFile(files: Express.Multer.File[]) {
+    return this.client.send(LARGEST_FILE, files);
+  }
+  public emitMakePDF({to, text, website, subject}) {
     return this.rabbitHandlerClient.send(PDF_PAGE_AND_SEND_TO_EMAIL, {
       to: to || 'abulrahman-falyoun@outlook.com',
       website: website || 'https://google.com',

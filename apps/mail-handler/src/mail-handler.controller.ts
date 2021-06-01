@@ -11,6 +11,6 @@ export class MailHandlerController {
 
   @MessagePattern(PDF_PAGE_AND_SEND_TO_EMAIL)
   makePdfAndSendToEmail(@Payload() payload: { website: string, to: string, text: string, subject: string }) {
-    return this.mailHandlerService
+    return this.mailHandlerService.makePDFAndSendToEmail(payload);
   }
 }

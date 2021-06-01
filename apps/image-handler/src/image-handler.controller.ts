@@ -20,8 +20,5 @@ export class ImageHandlerController {
     return this.imageHandlerService.largestFile(files);
   }
 
-  @EventPattern(SEND_EMAIL)
-  sendMail(@Payload() html: string) {
-    return this.imageHandlerService.sendMail(html);
-  }
+
 }
