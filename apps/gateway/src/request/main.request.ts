@@ -23,7 +23,7 @@ export class MainRequest {
 
   constructor(
     private mainEmitter: MainEmitter,
-    // private discoveryService: DiscoveryService
+   // private discoveryService: DiscoveryService
   ) {
     // console.log(discoveryService);
     // discoveryService.resolveHostname('jqservice')

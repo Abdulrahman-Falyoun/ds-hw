@@ -9,7 +9,7 @@ import { RABBIT_HANDLER_REDIS_PROXY_CLIENT } from '../ms-clients/rabbit-handler.
 export class MainEmitter {
 
   constructor(
-    @Inject(IMAGE_HANDLER_REDIS_PROXY_CLIENT) private readonly client: ClientProxy,
+    @Inject(IMAGE_HANDLER_REDIS_PROXY_CLIENT) private readonly redisHandlerClient: ClientProxy,
     @Inject(RABBIT_HANDLER_REDIS_PROXY_CLIENT) private readonly rabbitHandlerClient: ClientProxy,
     ) {
   }
@@ -19,16 +19,16 @@ export class MainEmitter {
       height: number; width: number
     }
   }) {
-    return this.client.send(RESIZE_IMAGE, { image, opts }).toPromise();
+    return this.redisHandlerClient.send(RESIZE_IMAGE, { image, opts }).toPromise();
   }
 
   public emitTakeScreenshot(website: string) {
     console.log('screenshot emitted');
-    return this.client.send(TAKE_SCREENSHOT, website).toPromise();
+    return this.redisHandlerClient.send(TAKE_SCREENSHOT, website).toPromise();
   }
 
   public emitLargestFile(files: Express.Multer.File[]) {
-    return this.client.send(LARGEST_FILE, files);
+    return this.redisHandlerClient.send(LARGEST_FILE, files);
   }
   public emitMakePDF({to, text, website, subject}) {
     return this.rabbitHandlerClient.send(PDF_PAGE_AND_SEND_TO_EMAIL, {

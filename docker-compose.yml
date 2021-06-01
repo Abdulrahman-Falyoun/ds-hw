@@ -63,7 +63,7 @@ services:
     networks:
       - nesjs-network
     volumes:
-      - /docker-volumes/image-handler
+      - /docker-volumes/mail-handler
     restart: unless-stopped
 networks:
   nesjs-network:

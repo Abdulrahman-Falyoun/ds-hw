@@ -18,12 +18,12 @@ import { RABBIT_HANDLER_REDIS_PROXY_CLIENT, RabbitHandlerClient } from '../ms-cl
   imports: [
     // EurekaModule.forRoot({
     //   eureka: {
-    //     host: '192.168.99.100',
-    //     port: 32768,
+    //     host: 'localhost',
+    //     port: 8761,
     //     servicePath: '/eureka/apps/',
     //   },
     //   service: {
-    //     host: '192.168.33.209',
+    //     host: '192.168.39.146',
     //     port: 2341,
     //     name: 'gateway',
     //   },
