@@ -25,6 +25,24 @@
       "compilerOptions": {
         "tsConfigPath": "apps/gateway/tsconfig.app.json"
       }
+    },
+    "website-handler": {
+      "type": "application",
+      "root": "apps/website-handler",
+      "entryFile": "main",
+      "sourceRoot": "apps/website-handler/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/website-handler/tsconfig.app.json"
+      }
+    },
+    "mail-handler": {
+      "type": "application",
+      "root": "apps/mail-handler",
+      "entryFile": "main",
+      "sourceRoot": "apps/mail-handler/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/mail-handler/tsconfig.app.json"
+      }
     }
   }
 }

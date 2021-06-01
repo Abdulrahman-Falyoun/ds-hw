@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { ImageHandlerService } from './image-handler.service';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { LARGEST_FILE, RESIZE_IMAGE, SEND_EMAIL, TAKE_SCREENSHOT } from '../../patterns';
@@ -6,11 +6,6 @@ import { LARGEST_FILE, RESIZE_IMAGE, SEND_EMAIL, TAKE_SCREENSHOT } from '../../p
 @Controller()
 export class ImageHandlerController {
   constructor(private readonly imageHandlerService: ImageHandlerService) {
-  }
-
-  @MessagePattern(TAKE_SCREENSHOT)
-  takeScreenshot(@Payload() website: string) {
-    return this.imageHandlerService.takeScreenshot(website);
   }
 
 

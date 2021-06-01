@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ImageHandlerRequest } from './image-handler.request';
-import { ImageHandlerEmitter } from '../emitters/image-handler.emitter';
-import { IMAGE_HANDLER_REDIS_PROXY_CLIENT, ImageHandlerClient } from '../redis-clients/image-handler.client';
+import { MainRequest } from './main.request';
+import { MainEmitter } from '../emitters/main.emitter';
+import { IMAGE_HANDLER_REDIS_PROXY_CLIENT, RedisHandlerClient } from '../ms-clients/redis-handler.client';
 import {
   DiscoveryService,
   EurekaModule,
@@ -12,6 +12,7 @@ import {
   ServiceDto,
 } from 'nestjs-eureka';
 import { Eureka, EurekaClient } from 'eureka-js-client';
+import { RABBIT_HANDLER_REDIS_PROXY_CLIENT, RabbitHandlerClient } from '../ms-clients/rabbit-handler.client';
 
 @Module({
   imports: [
@@ -31,10 +32,10 @@ import { Eureka, EurekaClient } from 'eureka-js-client';
     }),
   ],
   controllers: [
-    ImageHandlerRequest,
+    MainRequest,
   ],
   providers: [
-    ImageHandlerEmitter,
+    MainEmitter,
     DiscoveryService,
     {
       useValue: new Eureka({
@@ -66,7 +67,11 @@ import { Eureka, EurekaClient } from 'eureka-js-client';
     },
     {
       provide: IMAGE_HANDLER_REDIS_PROXY_CLIENT,
-      useValue: ImageHandlerClient,
+      useValue: RedisHandlerClient,
+    },
+    {
+      provide: RABBIT_HANDLER_REDIS_PROXY_CLIENT,
+      useValue: RabbitHandlerClient,
     },
     // {
     //   useValue: {
@@ -96,6 +101,6 @@ import { Eureka, EurekaClient } from 'eureka-js-client';
 
   ],
 })
-export class ImageHandlerRequestModule {
+export class MainRequestModule {
 
 }

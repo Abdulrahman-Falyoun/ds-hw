@@ -4,12 +4,13 @@ import { ConfigModule } from '@nestjs/config';
 import configuration from './configuration';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { FileUploadModule } from '../../../libs/file-upload/src';
-import { ImageHandlerRequestModule } from './request/image-handler.request.module';
+import { MainRequestModule } from './request/main.request.module';
 import { DiscoveryService, EurekaModule } from 'nestjs-eureka';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
-    ImageHandlerRequestModule,
+    MainRequestModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../../../', 'public/images'),
       serveRoot: '/files',
@@ -19,7 +20,6 @@ import { DiscoveryService, EurekaModule } from 'nestjs-eureka';
       load: [configuration],
     }),
     FileUploadModule,
-
   ],
   controllers: [],
   providers: [],

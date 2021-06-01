@@ -1,5 +1,5 @@
 import { Body, Controller, Inject, Logger, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { ImageHandlerEmitter } from '../emitters/image-handler.emitter';
+import { MainEmitter } from '../emitters/main.emitter';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { pathToUploadedFiles } from '../../../../libs/file-upload/src/constants';
@@ -7,12 +7,12 @@ import { editFileName, imageFileFilter } from '../../../../libs/file-upload/src/
 import { DiscoveryService } from 'nestjs-eureka';
 
 @Controller('/image-handle')
-export class ImageHandlerRequest {
+export class MainRequest {
 
-  private readonly logger = new Logger(ImageHandlerRequest.name);
+  private readonly logger = new Logger(MainRequest.name);
 
   constructor(
-    private imageHandlerEmitter: ImageHandlerEmitter,
+    private imageHandlerEmitter: MainEmitter,
     private discoveryService: DiscoveryService
   ) {
     console.log(discoveryService);
