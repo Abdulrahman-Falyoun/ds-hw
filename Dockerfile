@@ -45,4 +45,4 @@ RUN npm run build
 FROM node:10-alpine
 WORKDIR /
 COPY --from=development /apps ./
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "all-services"]

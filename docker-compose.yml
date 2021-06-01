@@ -8,7 +8,7 @@ services:
       context: .
       target: development
       dockerfile: ./Dockerfile
-    command: nest start gateway --watch
+    command: nest start gateway
     ports:
       - 3000:3000
       - 9229:9229
@@ -24,10 +24,42 @@ services:
       context: .
       target: development
       dockerfile: ./Dockerfile
-    command:  nest start image-handler --watch
+    command:  nest start image-handler
     ports:
       - 3001:3001
       - 9239:9239
+    networks:
+      - nesjs-network
+    volumes:
+      - /docker-volumes/image-handler
+    restart: unless-stopped
+  dev.website-handler:
+    container_name: nestjs_website_handler_api_dev
+    image: nestjs-api-dev:1.1.0
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    command:  nest start website-handler
+    ports:
+      - 3002:3002
+      - 9249:9249
+    networks:
+      - nesjs-network
+    volumes:
+      - /docker-volumes/website-handler
+    restart: unless-stopped
+  dev.mail-handler:
+    container_name: nestjs_mail_handler_api_dev
+    image: nestjs-api-dev:1.1.0
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    command:  nest start mail-handler
+    ports:
+      - 3003:3003
+      - 9269:9269
     networks:
       - nesjs-network
     volumes:
