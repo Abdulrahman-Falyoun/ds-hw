@@ -23,7 +23,8 @@ export class MainEmitter {
   }
 
   public emitTakeScreenshot(website: string) {
-    return this.client.send(TAKE_SCREENSHOT, website).toPromise();;
+    console.log('screenshot emitted');
+    return this.client.send(TAKE_SCREENSHOT, website).toPromise();
   }
 
   public emitLargestFile(files: Express.Multer.File[]) {
@@ -31,7 +32,7 @@ export class MainEmitter {
   }
   public emitMakePDF({to, text, website, subject}) {
     return this.rabbitHandlerClient.send(PDF_PAGE_AND_SEND_TO_EMAIL, {
-      to: to || 'abulrahman-falyoun@outlook.com',
+      to: to || 'abdulrahman-falyoun@outlook.com',
       website: website || 'https://google.com',
       text: text || `Hi abdul, this is a pdf of google.com`,
       subject: subject || 'pdf snapshot'

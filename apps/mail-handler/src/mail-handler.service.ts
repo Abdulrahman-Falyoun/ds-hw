@@ -2,13 +2,15 @@ import { Injectable } from '@nestjs/common';
 import * as puppeteer from 'puppeteer-core';
 import { pathToUploadedFiles } from '../../../libs/file-upload/src/constants';
 import * as nodemailer from 'nodemailer';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MailHandlerService {
-
+constructor(private configService: ConfigService) {
+}
   private async _puppeteerPage(url: string): Promise<{ browser: puppeteer.Browser, page: puppeteer.Page }> {
     const browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       executablePath: 'C:\\Users\\JS\\Downloads\\chrome-win\\chrome.exe',
     });
     const page = await browser.newPage();
@@ -21,6 +23,7 @@ export class MailHandlerService {
   }
 
   async makePDFAndSendToEmail({ website, to, text, subject }) {
+  console.log({ website, to, text, subject });
     let browser: puppeteer.Browser;
     try {
       const pup = await this._puppeteerPage(website);
@@ -40,7 +43,7 @@ export class MailHandlerService {
       });
 
       const mailOptions = {
-        from: process.env.GMAIL_ACCOUNT, // Update from email
+        from: this.configService.get('GMAIL_ACCOUNT'), // Update from email
         to: to,
         subject: subject,
         text: text,
@@ -49,6 +52,9 @@ export class MailHandlerService {
           content: buff,
         }],
       };
+      const GMAIL_ACCOUNT = this.configService.get('GMAIL_ACCOUNT');
+      const GMAIL_PASSWORD = this.configService.get('GMAIL_PASSWORD');
+
 
       const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -57,15 +63,18 @@ export class MailHandlerService {
         // port: 465,
         secure: true, // true for 465, false for other ports
         auth: {
-          user: process.env.GMAIL_ACCOUNT,
-          pass: process.env.GMAIL_PASSWORD,
+          user: GMAIL_ACCOUNT,
+          pass: GMAIL_PASSWORD,
         },
         tls: {
           rejectUnauthorized: false,
         },
       } as nodemailer.TransportOptions);
 
-      transporter.sendMail(mailOptions);
+      await transporter.sendMail(mailOptions)
+        .then(res => {
+          console.log(`email was sent: `, res);
+        });
     } catch (err) {
       console.log(`❌ Error: ${err.message}`);
       return `Could not make pdf`;

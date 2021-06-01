@@ -10,6 +10,7 @@ export class WebsiteHandlerController {
 
   @MessagePattern(TAKE_SCREENSHOT)
   takeScreenshot(@Payload() website: string) {
+    console.log(`screenshot for: ${website}`)
     return this.websiteHandlerService.takeScreenshot(website);
   }
 

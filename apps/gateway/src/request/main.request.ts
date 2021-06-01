@@ -10,23 +10,23 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { MainEmitter } from '../emitters/main.emitter';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { pathToUploadedFiles } from '../../../../libs/file-upload/src/constants';
 import { editFileName, imageFileFilter } from '../../../../libs/file-upload/src/helpers';
 import { DiscoveryService } from 'nestjs-eureka';
 
-@Controller('/image-handle')
+@Controller('/api')
 export class MainRequest {
 
   private readonly logger = new Logger(MainRequest.name);
 
   constructor(
     private mainEmitter: MainEmitter,
-    private discoveryService: DiscoveryService
+    // private discoveryService: DiscoveryService
   ) {
-    console.log(discoveryService);
-    discoveryService.resolveHostname('jqservice')
+    // console.log(discoveryService);
+    // discoveryService.resolveHostname('jqservice')
   }
 
 
@@ -39,15 +39,16 @@ export class MainRequest {
 
   @Post('/largest-file')
   @UseInterceptors(
-    FileInterceptor('images[]', {
+    FilesInterceptor("images[]", 20, {
       storage: diskStorage({
         destination: pathToUploadedFiles,
-        filename: editFileName,
+        filename: editFileName
       }),
-      fileFilter: imageFileFilter,
-    }),
+      fileFilter: imageFileFilter
+    })
   )
   largestFile(@UploadedFiles() files: Express.Multer.File[]) {
+    console.log('emitting largest files')
     return this.mainEmitter.emitLargestFile(files);
   }
 
@@ -67,7 +68,6 @@ export class MainRequest {
     }),
   )
   resize(@UploadedFile() image: Express.Multer.File, @Query() opts: { width: number, height: number }) {
-
     return this.mainEmitter.emitResizeImage({ image, opts });
   }
 }
