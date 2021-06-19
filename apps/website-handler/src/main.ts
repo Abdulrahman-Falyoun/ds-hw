@@ -3,6 +3,8 @@ import { WebsiteHandlerModule } from './website-handler.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ImageHandlerModule } from '../../image-handler/src/image-handler.module';
 import { Colors, print, Symbols } from '../../../libs/printer/libs';
+import { registerAsEurekaService } from '../../../libs/utils/eureka-handler';
+import { WEBSITE_HANDLER_ID } from '../../ids';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(WebsiteHandlerModule, {
@@ -12,6 +14,30 @@ async function bootstrap() {
       url: process.env.REDIS_URL,
     },
   });
+
+
+  const eureka = registerAsEurekaService({
+    app: 'website-handler',
+    instanceId: WEBSITE_HANDLER_ID,
+    hostName: 'localhost',
+    ipAddr: '127.0.0.1',
+    port: {
+      '$': 7349,
+      '@enabled': true,
+    },
+    vipAddress: 'ds.ite',
+    statusPageUrl: 'http://localhost:7349/info',
+    dataCenterInfo: {
+      '@class': 'com.netflix.appinfo.AmazonInfo',
+      name: 'MyOwn',
+    },
+  });
+
+  eureka.start(err => {
+    if(err) {
+      console.log('mail-handler.ts eureka error: ', err);
+    }
+  })
 
   await app.listen(() => {
     print(`Website handler service is running`, Colors.pending, Symbols.ok);

@@ -5,6 +5,7 @@ export const registerAsEurekaService = (instance: EurekaClient.EurekaInstanceCon
   eureka: {
     host: 'localhost',
     port: 8761,
+    preferSameZone: false,
     // fetchRegistry: false,
     // registerWithEureka: true,
     servicePath: '/eureka/apps/',
@@ -15,6 +16,6 @@ export const registerAsEurekaService = (instance: EurekaClient.EurekaInstanceCon
     },
   },
   instance: {
-    ...instance,
+    ...instance
   },
 });

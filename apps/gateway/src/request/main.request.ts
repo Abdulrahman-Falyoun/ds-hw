@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   Inject,
-  Logger,
+  Logger, NotFoundException,
   Post,
   Query,
   UploadedFile,
@@ -15,6 +15,8 @@ import { diskStorage } from 'multer';
 import { pathToUploadedFiles } from '../../../../libs/file-upload/src/constants';
 import { editFileName, imageFileFilter } from '../../../../libs/file-upload/src/helpers';
 import { DiscoveryService } from 'nestjs-eureka';
+import { gatewayEureka } from '../main';
+import { IMAGE_HANDLER_ID } from '../../../ids';
 
 @Controller('/api')
 export class MainRequest {
@@ -23,33 +25,49 @@ export class MainRequest {
 
   constructor(
     private mainEmitter: MainEmitter,
-   // private discoveryService: DiscoveryService
+    // private discoveryService: DiscoveryService
   ) {
     // console.log(discoveryService);
     // discoveryService.resolveHostname('jqservice')
   }
 
 
+  private _isServiceOn(serviceId: string): boolean {
+    return gatewayEureka.getInstancesByVipAddress('ds.ite').filter(s => {
+      console.log('s.instanceId: ', s.instanceId);
+      console.log('service id: ', serviceId);
+      return s.instanceId === serviceId;
+    }).length > 0;
+  }
+
   @Post('/screenshot')
   takeScreenshot(@Body() data: { website: string }) {
     const { website } = data;
     this.logger.log(`Requested screenshot for: ${website}`);
+
+
     return this.mainEmitter.emitTakeScreenshot(website);
   }
 
   @Post('/largest-file')
   @UseInterceptors(
-    FilesInterceptor("images[]", 20, {
+    FilesInterceptor('images[]', 20, {
       storage: diskStorage({
         destination: pathToUploadedFiles,
-        filename: editFileName
+        filename: editFileName,
       }),
-      fileFilter: imageFileFilter
-    })
+      fileFilter: imageFileFilter,
+    }),
   )
   largestFile(@UploadedFiles() files: Express.Multer.File[]) {
-    console.log('emitting largest files')
-    return this.mainEmitter.emitLargestFile(files);
+    console.log('emitting largest files');
+    if (this._isServiceOn(IMAGE_HANDLER_ID)) {
+      return this.mainEmitter.emitLargestFile(files);
+    }
+
+    throw new NotFoundException({
+      message: 'service is off',
+    });
   }
 
   @Post('/pdf/send-email')

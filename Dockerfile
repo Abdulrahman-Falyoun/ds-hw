@@ -41,7 +41,6 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-
 FROM node:10-alpine
 WORKDIR /
 COPY --from=development /apps ./
