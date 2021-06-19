@@ -23,6 +23,7 @@
     "test:e2e": "jest --config ./apps/distributed-systems-hw/test/jest-e2e.json"
   },
   "dependencies": {
+    "@dollarsign/nestjs-jaeger-tracing": "^1.0.7",
     "@nestjs/cli": "^7.6.0",
     "@nestjs/common": "^7.6.15",
     "@nestjs/config": "^0.6.3",
