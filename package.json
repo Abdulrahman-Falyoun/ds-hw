@@ -34,6 +34,7 @@
     "@nestjs/serve-static": "^2.1.4",
     "amqp-connection-manager": "^3.2.2",
     "amqplib": "^0.8.0",
+    "axios": "^0.21.1",
     "eureka-js-client": "^4.5.0",
     "mongoose": "^5.12.11",
     "nestjs-eureka": "^1.0.7",

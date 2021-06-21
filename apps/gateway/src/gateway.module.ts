@@ -4,14 +4,25 @@ import { ConfigModule } from '@nestjs/config';
 import configuration from './configuration';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { FileUploadModule } from '../../../libs/file-upload/src';
-import { MainRequestModule } from './request/main.request.module';
-import { DiscoveryService, EurekaModule } from 'nestjs-eureka';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import {
+  ClientProxyFactory,
+  ClientsModule,
+  Transport,
+} from '@nestjs/microservices';
 import { TracingModule } from '@dollarsign/nestjs-jaeger-tracing/dist';
+import {
+  IMAGE_HANDLER_REDIS_PROXY_CLIENT,
+  WEBSITE_HANDLER_REDIS_PROXY_CLIENT,
+} from './ms-clients/redis-handler.client';
+import { MainRequest } from './request/main.request';
+import { MainEmitter } from './emitters/main.emitter';
+import {
+  RABBIT_HANDLER_REDIS_PROXY_CLIENT,
+  RabbitHandlerClient,
+} from './ms-clients/rabbit-handler.client';
 
 @Module({
   imports: [
-    MainRequestModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../../../', 'public/images'),
       serveRoot: '/files',
@@ -21,16 +32,6 @@ import { TracingModule } from '@dollarsign/nestjs-jaeger-tracing/dist';
       load: [configuration],
     }),
     FileUploadModule,
-    // TracingModule.forRoot({
-    //   exporterConfig: {
-    //     serviceName: 'core-service',
-    //     // port: 16686, 9411
-    //     port: 16686,
-    //     host: 'localhost',
-    //   },
-    //   isSimpleSpanProcessor: true,
-    // }),
-
     ClientsModule.register([
       {
         name: 'GATEWAY_SERVICE',
@@ -40,7 +41,14 @@ import { TracingModule } from '@dollarsign/nestjs-jaeger-tracing/dist';
         },
       },
       {
-        name: 'IMAGE_HANDLER_SERVICE',
+        name: IMAGE_HANDLER_REDIS_PROXY_CLIENT,
+        transport: Transport.REDIS,
+        options: {
+          ...TracingModule.getParserOptions(),
+        },
+      },
+      {
+        name: WEBSITE_HANDLER_REDIS_PROXY_CLIENT,
         transport: Transport.REDIS,
         options: {
           ...TracingModule.getParserOptions(),
@@ -56,8 +64,13 @@ import { TracingModule } from '@dollarsign/nestjs-jaeger-tracing/dist';
       }),
     }),
   ],
-  controllers: [],
-  providers: [],
+  controllers: [MainRequest],
+  providers: [
+    {
+      provide: RABBIT_HANDLER_REDIS_PROXY_CLIENT,
+      useValue: RabbitHandlerClient,
+    },
+    MainEmitter,
+  ],
 })
-export class GatewayModule {
-}
+export class GatewayModule {}

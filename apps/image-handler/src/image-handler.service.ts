@@ -1,5 +1,8 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { createThumbnail, getImageDimensions } from '../../../libs/file-upload/src/helpers';
+import {
+  createThumbnail,
+  getFileMetadata,
+} from '../../../libs/file-upload/src/helpers';
 import { extname } from 'path';
 import { Model } from 'mongoose';
 import { IFile } from '../../../libs/file-upload/src';
@@ -7,22 +10,31 @@ import { DS_FILE_SCHEMA } from '../../schema-names';
 import { InjectModel } from '@nestjs/mongoose';
 @Injectable()
 export class ImageHandlerService {
+  constructor(
+    @InjectModel(DS_FILE_SCHEMA) private readonly fileModel: Model<IFile>,
+  ) {}
 
-  constructor(@InjectModel(DS_FILE_SCHEMA) private readonly fileModel: Model<IFile>) {
-  }
-
-  largestFile(files: Express.Multer.File []) {
+  largestFile(files: Express.Multer.File[]) {
     const sortedFiles = files.sort((f1, f2) => f1.size - f2.size);
     return sortedFiles[sortedFiles.length - 1];
   }
 
+  async getMetadata(file: string) {
+    return await getFileMetadata(file);
+  }
 
-  async resizeImage({ image, opts }: { image: Express.Multer.File; opts: { width: number, height: number } }) {
+  async resizeImage({
+    image,
+    opts,
+  }: {
+    image: Express.Multer.File;
+    opts: { width: number; height: number };
+  }) {
     try {
       console.log(`creating thumbnail`);
       await createThumbnail(image, +opts.width);
       console.log(`thumbnail created`);
-      const metadata = await getImageDimensions(image.path);
+      const metadata = await getFileMetadata(image.path);
       const createdFile = await this.fileModel.create({
         url: `http://localhost:${process.env.GATEWAY_PORT}/files/${image.filename}`,
         thumbnail: `http://localhost:${process.env.GATEWAY_PORT}/files/thumbnails/${image.filename}`,
@@ -45,6 +57,5 @@ export class ImageHandlerService {
         message: e.message || e,
       });
     }
-
   }
 }

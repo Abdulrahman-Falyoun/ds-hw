@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { createThumbnail, getImageDimensions } from './helpers';
+import { createThumbnail, getFileMetadata } from './helpers';
 import { InjectModel } from '@nestjs/mongoose';
 import { DS_FILE_SCHEMA } from '../../../apps/schema-names';
 import { Model } from 'mongoose';
@@ -23,7 +23,7 @@ export class FileUploadService {
         message: e.message || e,
       });
     }
-    const metadata = await getImageDimensions(file.path);
+    const metadata = await getFileMetadata(file.path);
     createdFile = await this.fileModel.create({
       url: `http://localhost:7000/files/${file.filename}`,
       thumbnail: `http://localhost:7000/files/thumbnails/${file.filename}`,

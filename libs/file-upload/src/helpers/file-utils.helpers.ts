@@ -8,7 +8,7 @@ export const imageFileFilter = (req, file, callback) => {
   callback(null, true);
 };
 
-export const getImageDimensions = async (image) => {
+export const getFileMetadata = async (image) => {
   return sharp(image).metadata();
 }
 

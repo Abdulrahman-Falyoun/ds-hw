@@ -5,6 +5,7 @@ import { Colors, print, Symbols } from '../../../libs/printer/libs';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { registerAsEurekaService } from '../../../libs/utils/eureka-handler';
 import { IMAGE_HANDLER_ID } from '../../ids';
+import { TracingModule } from '@dollarsign/nestjs-jaeger-tracing/dist';
 
 async function bootstrap() {
 
@@ -14,6 +15,7 @@ async function bootstrap() {
     options: {
       auth_pass: process.env.REDIS_PASSWORD,
       url: process.env.REDIS_URL,
+      ...TracingModule.getParserOptions(),
     },
   });
 

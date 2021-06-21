@@ -5,6 +5,7 @@ import { ImageHandlerModule } from '../../image-handler/src/image-handler.module
 import { Colors, print, Symbols } from '../../../libs/printer/libs';
 import { registerAsEurekaService } from '../../../libs/utils/eureka-handler';
 import { WEBSITE_HANDLER_ID } from '../../ids';
+import { TracingModule } from '@dollarsign/nestjs-jaeger-tracing/dist';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(WebsiteHandlerModule, {
@@ -12,6 +13,7 @@ async function bootstrap() {
     options: {
       auth_pass: process.env.REDIS_PASSWORD,
       url: process.env.REDIS_URL,
+      ...TracingModule.getParserOptions(),
     },
   });
 

@@ -9,6 +9,10 @@ import { DS_FILE_SCHEMA } from '../../schema-names';
 import { FileSchema } from '../../../libs/file-upload/src';
 import { TracingModule } from '@dollarsign/nestjs-jaeger-tracing/dist';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import {
+  IMAGE_HANDLER_REDIS_PROXY_CLIENT,
+  WEBSITE_HANDLER_REDIS_PROXY_CLIENT,
+} from '../../gateway/src/ms-clients/redis-handler.client';
 
 @Module({
   imports: [
@@ -31,12 +35,23 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       isSimpleSpanProcessor: true,
     }),
     ClientsModule.register([
-      { name: 'IMAGE_HANDLER_SERVICE', transport: Transport.REDIS },
+      {
+        name: IMAGE_HANDLER_REDIS_PROXY_CLIENT,
+        transport: Transport.REDIS,
+        options: {
+          ...TracingModule.getParserOptions(),
+        },
+      },
+      {
+        name: WEBSITE_HANDLER_REDIS_PROXY_CLIENT,
+        transport: Transport.REDIS,
+        options: {
+          ...TracingModule.getParserOptions(),
+        },
+      },
     ]),
-
   ],
   controllers: [ImageHandlerController],
   providers: [ImageHandlerService],
 })
-export class ImageHandlerModule {
-}
+export class ImageHandlerModule {}
