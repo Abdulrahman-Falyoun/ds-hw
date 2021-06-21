@@ -128,4 +128,13 @@ export class MainRequest {
       metadata,
     };
   }
+
+  @Post('/screenshot/concurrently/metadata')
+  async getScreenshotConcurrentlyMetadata(
+    @Body() { website, path }: { website: string; path: string },
+  ) {
+    const pScreenshot = this.mainEmitter.emitTakeScreenshot(website);
+    const pMetadata = this.mainEmitter.emitGetMetadata(path);
+    return await Promise.all([pMetadata, pScreenshot]).then((res) => res);
+  }
 }
