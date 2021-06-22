@@ -18,10 +18,8 @@ import {
   editFileName,
   imageFileFilter,
 } from '../../../../libs/file-upload/src/helpers';
-import { DiscoveryService } from 'nestjs-eureka';
 import { gatewayEureka } from '../main';
 import { IMAGE_HANDLER_ID } from '../../../ids';
-import axios from 'axios';
 import * as fs from 'fs';
 export type healthType = {
   deadlocks: {
@@ -96,11 +94,26 @@ export class MainRequest {
     console.log('emitting largest files');
     if (this._isServiceOn(IMAGE_HANDLER_ID)) {
       return this.mainEmitter.emitLargestFile(files);
+    } else {
+      const healthObject: healthType = {
+        deadlocks: {
+          healthy: false,
+        },
+        Disk: {
+          healthy: false,
+        },
+        Memory: {
+          healthy: false,
+        },
+      };
+      fs.writeFileSync('health.json', JSON.stringify(healthObject), {
+        encoding: 'utf-8',
+      });
+      return healthObject;
     }
-
-    throw new NotFoundException({
-      message: 'service is off',
-    });
+    // throw new NotFoundException({
+    //   message: 'service is off',
+    // });
   }
 
   @Post('/pdf/send-email')
