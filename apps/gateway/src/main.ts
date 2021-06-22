@@ -28,14 +28,14 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const PORT = configService.get<number>('port');
 
-  gatewayEureka.start(async (err) => {
-
-    if (err) {
-      console.log('starting error: ', err);
-
-    }
-
-  });
+  try {
+    gatewayEureka.start(async (err) => {
+      if (err) {
+        // console.log('starting error: ', err);
+      }
+    });
+  } catch (e) {
+  }
 
   await app.listen(PORT, () =>
     print(

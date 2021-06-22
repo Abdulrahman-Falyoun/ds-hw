@@ -22,7 +22,18 @@ import { DiscoveryService } from 'nestjs-eureka';
 import { gatewayEureka } from '../main';
 import { IMAGE_HANDLER_ID } from '../../../ids';
 import axios from 'axios';
-
+import * as fs from 'fs';
+export type healthType = {
+  deadlocks: {
+    healthy: boolean;
+  };
+  Disk: {
+    healthy: boolean;
+  };
+  Memory: {
+    healthy: boolean;
+  };
+};
 @Controller('/api')
 export class MainRequest {
   private readonly logger = new Logger(MainRequest.name);
@@ -44,6 +55,13 @@ export class MainRequest {
     );
   }
 
+  @Post('/health')
+  checkHealth(): healthType {
+    const healthObject = fs.readFileSync('health.json', {
+      encoding: 'utf-8',
+    });
+    return JSON.parse(healthObject) as healthType;
+  }
   @Post('/screenshot')
   takeScreenshot(@Body() data: { website: string }) {
     const { website } = data;

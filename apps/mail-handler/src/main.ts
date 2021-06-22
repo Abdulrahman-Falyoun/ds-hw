@@ -35,11 +35,15 @@ async function bootstrap() {
     },
   });
 
-  eureka.start(err => {
-    if(err) {
-      console.log('mail-handler.ts eureka error: ', err);
-    }
-  })
+  try {
+    eureka.start(err => {
+      if(err) {
+        // console.log('mail-handler.ts eureka error: ', err);
+      }
+    })
+  } catch (e) {
+
+  }
 
   await app.listen(() => {
     print(`Mail handler service is running`, Colors.pending, Symbols.ok);
